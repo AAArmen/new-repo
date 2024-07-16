@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: nginx-alpine
+    runs-on: node-alpine
 
     steps:
     - name: Checkout repository
