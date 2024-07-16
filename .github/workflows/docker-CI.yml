@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-alpine
+    runs-on: alpine-latest
 
     steps:
     - name: Checkout repository
