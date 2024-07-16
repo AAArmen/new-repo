@@ -10,20 +10,42 @@ jobs:
     runs-on: node-alpine
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+#    - name: Checkout code
+#      uses: actions/checkout@v2
 
-    - name: Log in to Docker registry
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY }} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+#    - name: Log in to Docker registry
+#      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ secrets.DOCKER_REGISTRY }} -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+#    - name: Set up Docker Buildx
+#      uses: docker/setup-buildx-action@v1
+
+#    - name: Build and push Docker image
+#      uses: docker/build-push-action@v5
+#      with:
+#        push: true
+#        tags: ${{ secrets.DOCKER_REGISTRY }}/your-repository-name:latest
+#        build-args: |
+#          BASE_IMAGE=your-base-image
+#          OTHER_ARG=value
+
+- name: Checkout repository
+      uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
+    - name: Login to DockerHub
+      run: echo "${{ secrets.PASSWORD }}" | docker login ${{ secrets.REGISTRY }} -u ${{ secrets.USERNAME }} --password-stdin
+
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
+        context: test-Docker/
+        builder: ${{ steps.buildx.outputs.name }}
+        # file: Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_REGISTRY }}/your-repository-name:latest
-        build-args: |
-          BASE_IMAGE=your-base-image
-          OTHER_ARG=value
+        #tags: ${{ secrets.USERNAME }}/test-repo:latest
+        tags: ${{ secrets.REGISTRY }}/test_repo:latest
+        #tags: '${{ secrets.REGISTRY_URL }}/my-project/server:latest'
+        cache-from: type=registry,ref=${{ secrets.REGISTRY }}/test_repo/server:buildcache'
+        cache-to: type=registry,ref=${{ secrets.REGISTRY }}/test_repo/server:buildcache,mode=max'
