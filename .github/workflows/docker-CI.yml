@@ -29,4 +29,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_REGISTRY }}/repo1:latest
+        tags: ${{ secrets.REGISTRY }}/new-repo:latest
