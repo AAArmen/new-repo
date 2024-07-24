@@ -1,0 +1,40 @@
+version: '3'
+services:
+  registry:
+    image: registry:2
+    restart: always
+    ports:
+    - "5001:5000"
+    environment:
+     - REGISTRY_HTTP_TLS_CERTIFICATE:/ssl/fullchain.pem
+     - REGISTRY_HTTP_TLS_KEY:/ssh/privkey.pem
+     - REGISTRY_AUTH:htpasswd
+     - REGISTRY_AUTH_HTPASSWD_REALM:Registry-Realm
+     - REGISTRY_AUTH_HTPASSWD_PATH:/auth/registry.passwd
+     - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY:/data
+    volumes:
+      - ./ssl:/ssl
+      - ./data:/data
+      - ./auth:/auth
+    networks:
+      - mynet
+      
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+      - ./ssl:/etc/nginx/ssl/
+    networks:
+      - mynet
+networks:
+  mynet:
+    driver: bridge
+volumes:
+  registrydata:
+    driver: local
