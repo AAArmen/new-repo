@@ -32,10 +32,10 @@
 	```
 5. copy sertificates to ssl folder and disable nginx on computer
 	```
-	sudo cp /etc/letsencrypt/live/[your-domain.com]/fullchain.pem > to docker-registry/nginx/ssl/
+	sudo cp /etc/letsencrypt/archive/[your-domain.com]/fullchain1.pem > to docker-registry/nginx/ssl/
 	```
 	```
-	sudo cp /etc/letsencrypt/live/[your-domain.com]/privkey.pem > to docekr-registry/nginx/ssl/
+	sudo cp /etc/letsencrypt/archive/[your-domain.com]/privkey1.pem > to docekr-registry/nginx/ssl/
 	```
 	```
 	sudo systemctl stop nginx
@@ -45,7 +45,7 @@
 	```
 6. create  nginx configuration file 
 	```
-	cd /nginx/conf.d/
+	cd nginx/conf.d/
 	```
 	```
 	nano registry.conf
@@ -65,8 +65,8 @@
 		    listen 443 ssl http2;
 		    server_name registry.[your-domain.com];
 		
-		    ssl_certificate /etc/nginx/ssl/fullchain.pem;
-		    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+		    ssl_certificate /etc/nginx/ssl/fullchain1.pem;
+		    ssl_certificate_key /etc/nginx/ssl/privkey1.pem;
 		
 		    error_log  /var/log/nginx/error.log;
 		    access_log /var/log/nginx/access.log;
@@ -103,8 +103,8 @@
 		    ports:
 		    - "5000:5000"
 		    environment:
-		     - REGISTRY_HTTP_TLS_CERTIFICATE:/ssl/fullchain.pem
-		     - REGISTRY_HTTP_TLS_KEY:/ssl/privkey.pem
+		     - REGISTRY_HTTP_TLS_CERTIFICATE:/ssl/fullchain1.pem
+		     - REGISTRY_HTTP_TLS_KEY:/ssl/privkey1.pem
 		     - REGISTRY_AUTH:htpasswd
 		     - REGISTRY_AUTH_HTPASSWD_REALM:Registry-Realm
 		     - REGISTRY_AUTH_HTPASSWD_PATH:/auth/registry.passwd
