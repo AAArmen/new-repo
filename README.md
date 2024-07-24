@@ -1,25 +1,25 @@
 # build our docker registry & create git action for build to our registry 
 1. create forlder for repository
-	mkdir docker-repository
+	- mkdir docker-repository
 2. greate folders tree 
-	mkdir -p docker-registry/{nginx,auth,data}
-	mkdir -p docker-registry/nginx/{conf.d,ssl}
+	- mkdir -p docker-registry/{nginx,auth,data}
+	- mkdir -p docker-registry/nginx/{conf.d,ssl}
 3. create login password for registry
-	cd auth
-		htpasswd -Bc registry.passwd [username]
+	- cd auth
+		- htpasswd -Bc registry.passwd [username]
 4. generate ssl sertificates for registry
-	sudo apt install nginx 
-	sudo service nginx restart
-	sudo apt install certbot python3-certbot-nginx 
-	sudo certbot --nginx -d [your-domain.com] -d [www.your-domain.com]
+	- sudo apt install nginx 
+	- sudo service nginx restart
+	- sudo apt install certbot python3-certbot-nginx 
+	- sudo certbot --nginx -d [your-domain.com] -d [www.your-domain.com]
 5. copy sertificates to ssl folder and disable nginx on computer
-	sudo cp /etc/letsencrypt/live/[your-domain.com]/fullchain.pem > to docker-registry/nginx/ssl/ 
-	sudo cp /etc/letsencrypt/live/[your-domain.com]/privkey.pem > to docekr-registry/nginx/ssl/
-	sudo systemctl stop nginx
-	sudo systemctl disable nginx
+	- sudo cp /etc/letsencrypt/live/[your-domain.com]/fullchain.pem > to docker-registry/nginx/ssl/ 
+	- sudo cp /etc/letsencrypt/live/[your-domain.com]/privkey.pem > to docekr-registry/nginx/ssl/
+	- sudo systemctl stop nginx
+	- sudo systemctl disable nginx
 6. create  nginx configuration file 
-	cd /nginx/conf.d/
-	nano registry.conf
+	- cd /nginx/conf.d/
+	- nano registry.conf
 
 		upstream docker-registry {
 		    server registry:5000;
@@ -58,8 +58,8 @@
 		}
 	
 7. create docker compose file 
-	cd docker registry
-	nano docker-compose.yml
+	- cd docker registry
+	- nano docker-compose.yml
 	
 		version: '3'
 		services:
@@ -103,4 +103,4 @@
 		    driver: local
 
 8. run docker compose command 
-	docker compose up 
+	- docker compose up 
